@@ -17,7 +17,7 @@ def run_orvara(config_path, results_path):
     os.chdir(orvara_parent_path)
     
     os.makedirs(results_path, exist_ok=True) # Make sure output directory exists
-    # subprocess.run(["fit_orbit", config_path, "--output-dir", results_path])
+    subprocess.run(["fit_orbit", config_path, "--output-dir", results_path])
     subprocess.run(["plot_orbit", config_path, "--output-dir", results_path])
     
     os.chdir(gamma_cep_path) # Now change back
@@ -37,6 +37,11 @@ def prep_config():
     lines = []
     with open("config_gamma_cep.ini", "r") as conf_file:
         for line in conf_file:
+        
+            #if line.startswith("HGCAFile"):
+             #   hgca_path = os.path.join(orvara_parent_path, "orvara/HGCA_vEDR3.fits")
+              #  line = "HGCAFile = "+hgca_path+"\n"
+        
             if line.startswith("RVFile"):
                 rv_path = os.path.join(orvara_to_gamma_cep, "../data/orvara_all_rvs.txt")
                 line = "RVFile = "+rv_path+"\n"
@@ -85,7 +90,8 @@ def prep_config():
 if __name__=="__main__":
     
     gamma_cep_path = os.getcwd() # Preserve CWD of gamma cep Orvara script
-    orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Change to the Orvara parent dir
+    #orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Local Orvara parent dir
+    orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
     orvara_to_gamma_cep = os.path.relpath(gamma_cep_path, start=os.path.dirname(orvara_parent_path))
     
     prep_config()
