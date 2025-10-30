@@ -27,8 +27,8 @@
 # should have the same rows, with the same parameter descriptions, as
 # for the first companion listed above.
 #
-   0.00477        0.0000954   # mass (Msun, normal) (was lognormal but Judah changed); vals ~ to 5+/-0.1 M_J
-   3         0.1     # semimajor axis (AU, normal) (was lognormal but Judah changed)
+   0.00477    0.0000954   # mass (Msun, normal) (was lognormal but Judah changed); vals ~ to 5+/-0.1 M_J
+   3          0.1     # semimajor axis (AU, normal) (was lognormal but Judah changed)
    0.0        0.001   # sqrt(ecc)*sin(omega)
    0.2        0.001   # sqrt(ecc)*cos(omega)
    0.5        0.3   # inclination (radians, valid region 0->pi)
