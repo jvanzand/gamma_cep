@@ -1,0 +1,10 @@
+
+## Exclude all folders, except for some exceptions
+*/
+!data/
+!orvara_fit/
+!octofitter_fit/
+
+## Exclude common outputs of fitting
+*.png
+*.fits
