@@ -13,7 +13,7 @@ println("Number of threads: ", Threads.nthreads(), ", as specified in ~/.bashrc"
 
 do_rv=true
 if do_rv
-    rv_file = "data/all_rvs.csv"
+    rv_file = "data/octofitter_all_rvs.csv"
     rv_dat_raw = CSV.read(rv_file, DataFrame, delim=',')
     rv_dat = DataFrame();
     rv_dat.epoch = jd2mjd.(rv_dat_raw.time)
@@ -113,7 +113,7 @@ end
 
 do_astrom=true
 if do_astrom
-    relAst_file = "data/all_relAst.csv"
+    relAst_file = "data/octofitter_all_relAst.csv"
     relAst_dat_raw = CSV.read(relAst_file, DataFrame, delim=',')
     relAst_dat = DataFrame();
     relAst_dat.epoch = jd2mjd.(relAst_dat_raw.jd)

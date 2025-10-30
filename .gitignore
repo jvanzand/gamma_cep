@@ -8,3 +8,7 @@
 ## Exclude common outputs of fitting
 *.png
 *.fits
+
+## Exclude HGCA
+data/tests/*
+data/HGCA_vEDR3.fits
