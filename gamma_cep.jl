@@ -236,7 +236,7 @@ sys = System(
     name = "HD222404",
     companions=[planet_1, planet_2],
     likelihoods=[rvlike_cfht, rvlike_hires, rvlike_apf,
-                 rvlike_mcdonald1, rvlike_mcdonald2, rvlike_mcdonald3, rvlike_torres],
+                 rvlike_mcdonald1, rvlike_mcdonald2, rvlike_mcdonald3],
     variables=@variables begin
         #M ~ truncated(Normal(1.27, 0.06),lower=1.09, upper=1.45)
         plx ~ gaia_plx(gaia_id=2281778105594488192)
@@ -254,62 +254,73 @@ sys = System(
 
 
 #################################################################
-# Now make the model for sampling
-
+# Now make the model and sample, or load a pre-computed chain
 model = Octofitter.LogDensityModel(sys)
 
-
-
-using_pma = false
-if using_pma
-    using Pigeons
-    chain, pt = octofit_pigeons(model, n_rounds=14, explorer=SliceSampler())
+load_chain=false
+if load_chain
+    load_folder="outputs_McD3_full/"
+    chain = Octofitter.loadchain(load_folder+"output.fits")
+    model = deserialize(load_folder+"model.jls")
+    fig_rv_post = Octofitter.rvpostplot(model, chain)
     octoplot(model, chain)
     fig_corner = octocorner(model, chain)
-    # display(chain_pma)
 
-    # @infiltrate
-    
 else
 
-    init_chain = initialize!(model)
-
-    # Plot initialized data
-    if do_rv
-        fig_rv_init = Octofitter.rvpostplot(model, init_chain)
-    end
-
-    # if do_astrom
-    #     fig_relAstr_init = octoplot(model, init_chain)
-    # end
-
-
-    ## Normal Octofit sampling
-    using Random
-    rng = Random.Xoshiro(0)
-
-    chain = octofit(rng, model, iterations=1000)
-
-
-    # Make RV plots
-    if do_rv
-        fig_rv_post = Octofitter.rvpostplot(model, chain)
-    end
-
-    # Make RelAstro plots
-    if do_astrom
+    using_pma = true
+    if using_pma
+        using Pigeons
+        chain, pt = octofit_pigeons(model, n_rounds=13, explorer=SliceSampler())
         octoplot(model, chain)
+        Octofitter.rvpostplot(model, chain)
+        fig_corner = octocorner(model, chain)
+        # display(chain_pma)
+
+        # @infiltrate
+    
+    else
+
+        init_chain = initialize!(model)
+
+        # Plot initialized data
+        if do_rv
+            fig_rv_init = Octofitter.rvpostplot(model, init_chain)
+        end
+
+        # if do_astrom
+        #     fig_relAstr_init = octoplot(model, init_chain)
+        # end
+
+
+        ## Normal Octofit sampling
+        using Random
+        rng = Random.Xoshiro(0)
+
+        chain = octofit(rng, model, iterations=1000)
+
+
+        # Make RV plots
+        if do_rv
+            fig_rv_post = Octofitter.rvpostplot(model, chain)
+        end
+
+        # Make RelAstro plots
+        if do_astrom
+            octoplot(model, chain)
+        end
+
+        fig_corner = octocorner(model, chain)
     end
 
-    fig_corner = octocorner(model, chain)
+    # Save chain
+    Octofitter.savechain("output.fits", chain)
+    
+    # Save model
+    serialize("model.jls", model)
+
 end
 
-# Save chain
-Octofitter.savechain("output.fits", chain)
-
-@infiltrate
-# using MCMCChains, StatsPlots
-# plot(chain)
 lines(
     chain["Ab_e"][:],
     axis=(;
