@@ -17,7 +17,7 @@ def run_orvara(config_path, results_path):
     os.chdir(orvara_parent_path)
     
     os.makedirs(results_path, exist_ok=True) # Make sure output directory exists
-    subprocess.run(["fit_orbit", config_path, "--output-dir", results_path])
+    #subprocess.run(["fit_orbit", config_path, "--output-dir", results_path])
     subprocess.run(["plot_orbit", config_path, "--output-dir", results_path])
     
     os.chdir(gamma_cep_path) # Now change back
@@ -94,7 +94,7 @@ if __name__=="__main__":
     orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
     orvara_to_gamma_cep = os.path.relpath(gamma_cep_path, start=os.path.dirname(orvara_parent_path))
     
-    prep_config()
+    #prep_config()
     # import pdb; pdb.set_trace()
     
     
