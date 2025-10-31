@@ -78,17 +78,17 @@ def format_relAst():
     relAst['PA_rad'] = relAst['PA']*np.pi/180
     relAst['err_PA_rad'] = relAst['Err_PA']*np.pi/180
     
-    keep_cols = ['jd', 'sep_mas', 'err_sep_mas', 'PA_rad', 'err_PA_rad', 'Inst']
-    relAst = relAst[keep_cols]
-    relAst.to_csv('octofitter_all_relAst.csv', index=False) # Write to csv for Octofitter
+    octofitter_cols = ['jd', 'sep_mas', 'err_sep_mas', 'PA_rad', 'err_PA_rad', 'Inst']
+    relAst[octofitter_cols].to_csv('octofitter_all_relAst.csv', index=False) # Write to csv for Octofitter
     
     #############################################################################################
-    ## Orvara formatting is mostly the same, BUT it doesn't accept instrument indices,
+    ## Orvara formatting requires sep in arcsec and PA in deg, ALSO it doesn't accept instrument indices,
     ## and it DOES require the companion index to be supplied directly in the data
     
+    orvara_cols = ['jd', 'Sep', 'Err_Sep', 'PA', 'Err_PA', 'companion_index']
     relAst['companion_index'] = '0' # All relAst corresponds to companion B, so make them all 0
-    relAst = relAst.drop(columns='Inst')
-    np.savetxt('orvara_all_relAst.txt', relAst.values, fmt='%s') # Write to text file for Orvara
+    
+    np.savetxt('orvara_all_relAst.txt', relAst[orvara_cols].values, fmt='%s') # Write to text file for Orvara
     
     return
 
