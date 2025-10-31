@@ -268,7 +268,7 @@ if load_chain
 
 else
 
-    using_pma = true
+    using_pma = false
     if using_pma
         using Pigeons
         chain, pt = octofit_pigeons(model, n_rounds=13, explorer=SliceSampler())
