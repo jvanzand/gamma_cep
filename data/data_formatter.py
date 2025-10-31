@@ -57,15 +57,6 @@ def format_rvs():
     all_rvs_latex[latex_cols].to_latex('latex_tables/latex_all_rvs.tex', 
                                   index=False, formatters=format_dict)
     
-    # all_rvs.query("tel=='j'")[latex_cols].to_latex('latex_tables/latex_all_rvs_hires.tex',
-    #                                                 index=False, formatters=format_dict)
-    # all_rvs.query("tel=='apf'")[latex_cols].to_latex('latex_tables/latex_all_rvs_apf.tex',
-    #                                                   index=False, formatters=format_dict)
-    # all_rvs.query("tel=='mcdonald3'")[latex_cols].to_latex('latex_tables/latex_all_rvs_mcdonald3.tex',
-    #                                                         index=False, formatters=format_dict)
-    
-    
-    import pdb; pdb.set_trace()
     
     return
     
@@ -74,9 +65,9 @@ def format_relAst():
     Reformat the RelAst data Brendan
     sent me
     """
-    
-    relAst_Bowler = pd.read_csv('222404_Bowler_relAst.txt', delim_whitespace=True) # Compiled by Brendan
-    relAst_Mugrauer = pd.read_csv('222404_Mugrauer_relAst.txt', delim_whitespace=True) # Mugrauer+23
+
+    relAst_Bowler = pd.read_csv('222404_Bowler_relAST.txt', delim_whitespace=True) # Compiled by Brendan
+    relAst_Mugrauer = pd.read_csv('222404_Mugrauer_relAST.txt', delim_whitespace=True) # Mugrauer+23
     relAst = pd.concat([relAst_Bowler, relAst_Mugrauer])
     
     relAst['jd'] = Time(relAst.Date, format='decimalyear').jd
