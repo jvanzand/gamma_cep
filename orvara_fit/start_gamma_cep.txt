@@ -16,7 +16,7 @@
    20         0.1     # semimajor axis (AU, normal) (was lognormal but Judah changed)
    0.0        0.001   # sqrt(ecc)*sin(omega)
    0.2        0.001   # sqrt(ecc)*cos(omega)
-   0.5        0.3   # inclination (radians, valid region 0->pi)
+   1.57       0.1   # inclination (radians, valid region 0->pi)
    3.2        0.1   # long asc node (rad, valid -pi->3pi)
    0.8        0.2   # long at reference epoch (rad, valid -pi->3pi)
 #
@@ -31,6 +31,6 @@
    3          0.1     # semimajor axis (AU, normal) (was lognormal but Judah changed)
    0.0        0.001   # sqrt(ecc)*sin(omega)
    0.2        0.001   # sqrt(ecc)*cos(omega)
-   0.5        0.3   # inclination (radians, valid region 0->pi)
+   2.95       0.01   # inclination (radians, valid region 0->pi)
    3.2        0.1   # long asc node (rad, valid -pi->3pi)
    0.8        0.2   # long at reference epoch (rad, valid -pi->3pi)

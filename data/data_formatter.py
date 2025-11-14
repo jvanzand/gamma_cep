@@ -37,10 +37,18 @@ def format_rvs():
     ## Save RVs in Octofitter format
     octofitter_cols = ["time", "mnvel", "errvel", "tel"]
     all_rvs[octofitter_cols].to_csv('octofitter_all_rvs.csv', index=False) # Save RVs for use in Octofitter
-    
+    #import pdb; pdb.set_trace()
     ## Save RVs in Orvara format
     orvara_cols = ["time", "mnvel", "errvel", "tel_ind"]
-    np.savetxt('orvara_all_rvs.txt', all_rvs[orvara_cols].values, fmt='%s') # Write to text file for Orvara
+    np.savetxt('orvara_all_rvs_with_torres.txt', all_rvs[orvara_cols].values, fmt='%s') # Write to text file for Orvara
+    
+    # New tel2ind dict but without Torres RVs
+    all_rvs_no_torres = all_rvs.query("tel!='torres'")
+    no_torres_dict = {tel:f"{ind}" for ind, tel in enumerate(all_rvs_no_torres.drop_duplicates(subset='tel').tel)}
+    all_rvs_no_torres['tel_ind'] = all_rvs_no_torres['tel'].map(no_torres_dict)
+    #import pdb; pdb.set_trace()
+    np.savetxt('orvara_all_rvs_no_torres.txt', all_rvs_no_torres[orvara_cols]\
+                                                      .values, fmt='%s') # Write to text file for Orvara
     
     ## Save latex tables for paper
     all_rvs['time_trunc'] = all_rvs['time'] - 2400000.0
