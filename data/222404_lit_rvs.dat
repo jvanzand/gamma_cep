@@ -7,7 +7,6 @@
 # 2 - CFHT (Walker+92)
 # 3 - McDonald II (Hatzes+03)
 # 4 - McDonald III (Hatzes+03)
-# 5 - Various zero-point-corrected instruments (Griffin+02)
 
 
 Epoch[JD]    RV[m/s]      RV_err[m/s] InstrumentID

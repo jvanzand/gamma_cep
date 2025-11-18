@@ -90,8 +90,8 @@ def prep_config():
 if __name__=="__main__":
     
     gamma_cep_path = os.getcwd() # Preserve CWD of gamma cep Orvara script
-    # orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Local Orvara parent dir
-    orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
+    orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Local Orvara parent dir
+    # orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
     orvara_to_gamma_cep = os.path.relpath(gamma_cep_path, start=os.path.dirname(orvara_parent_path))
     
     #prep_config()

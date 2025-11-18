@@ -20,18 +20,34 @@ def format_rvs():
     # Load and format literature RVs
     lit_rvs = pd.read_csv("222404_lit_rvs.dat", delim_whitespace=True, skiprows=9)
     
+    # Special treatment for Griffin+02 RVs. Need to manually assign rv_err based on instrument
+    g_lit_rvs = pd.read_csv("222404_griffin_lit_rvs.dat", delim_whitespace=True, skiprows=3)
+    g_err_dict = {'Lick':0.9, 'Fick':0.5, 'Cambridge':0.8, 'DAO':0.3, 'HP':0.2, 'McDonald':0.03}
+    g_lit_rvs['RV_err'] = g_lit_rvs['Instrument'].map(g_err_dict) # Determine rv error based on instrument
+    
+    g_lit_rvs['rv'] = g_lit_rvs['RV[km/s]']*1000
+    g_lit_rvs['rv_err'] = g_lit_rvs['RV_err']*1000
+    g_lit_rvs['jd'] = g_lit_rvs['Epoch[MJD]'] + 2400000.5
+    g_lit_rvs['tel_ind'] = lit_rvs.InstrumentID.max()+1 # 1 more than the max among the other lit RVs (prob 4+1=5)
+    g_lit_rvs = g_lit_rvs[['jd', 'rv', 'rv_err', 'tel_ind']] # Take only the updated rows
+    
     new_cols = ['time', 'mnvel', 'errvel', 'tel_ind']
     lit_rvs.columns = new_cols
+    g_lit_rvs.columns = new_cols
+    
+    lit_rvs = pd.concat([lit_rvs, g_lit_rvs]) # Concatenate Griffin RVs onto lit RVs
     
     
     ## Dicts to give tel names to the Lit RVs and indices to the Jump RVs
-    ind2tel = {0:'mcdonald1', 1:'torres', 2:'cfht', 3:'mcdonald2', 4:'mcdonald3', 5:'j', 6:'apf'}
+    ind2tel = {0:'mcdonald1', 1:'torres', 2:'cfht', 3:'mcdonald2', 4:'mcdonald3', 5:'griffin', 6:'j', 7:'apf'}
     lit_rvs['tel'] = lit_rvs['tel_ind'].map(ind2tel)
     
     tel2ind = {tel:f"{ind}" for ind, tel in ind2tel.items()} # Invert tel_dict above to go back to inds
     jump_rvs['tel_ind'] = jump_rvs['tel'].map(tel2ind)
     
-    all_rvs = pd.concat([jump_rvs, lit_rvs]) # Combine all RVs
+    all_rvs = pd.concat([lit_rvs, jump_rvs]) # Combine all RVs
+    
+    # import pdb; pdb.set_trace()
     
     
     ## Save RVs in Octofitter format
