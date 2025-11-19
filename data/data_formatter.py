@@ -29,6 +29,7 @@ def format_rvs():
     g_lit_rvs['rv_err'] = g_lit_rvs['RV_err']*1000
     g_lit_rvs['jd'] = g_lit_rvs['Epoch[MJD]'] + 2400000.5
     g_lit_rvs['tel_ind'] = lit_rvs.InstrumentID.max()+1 # 1 more than the max among the other lit RVs (prob 4+1=5)
+    g_lit_rvs = g_lit_rvs.query("Instrument!='McDonald'") # Omit 11 McDonald RVs
     g_lit_rvs = g_lit_rvs[['jd', 'rv', 'rv_err', 'tel_ind']] # Take only the updated rows
     
     new_cols = ['time', 'mnvel', 'errvel', 'tel_ind']
