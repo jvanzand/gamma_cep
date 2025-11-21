@@ -1,6 +1,12 @@
 import os
 import sys
 import subprocess
+import numpy as np
+from astropy.io import fits
+
+orvara_path = "/data/users/judahvz/planet_bd/orvara"
+sys.path.insert(0, orvara_path)
+from orvara.format_fits import burnin_chain
 
 
 def run_orvara(config_path, results_path):
@@ -81,7 +87,37 @@ def prep_config():
         
     return
 
-
+def calculate_params_from_chains():
+    """
+    Load the MCMC chain from the Gamma Cep
+    fit and use it to calculate extra values
+    """
+    
+    chain_path = "outputs_good/gamma_cep_Temp0_chain000.fits"
+    chain_columns = ['inc0', 'asc0', 
+                     'msec1', 'inc1', 'asc1']
+    
+    chain = fits.open(chain_path)[1].data
+    chain = burnin_chain(chain.columns, 80000, reshape=True)
+    
+    
+    m1sini_chain = chain['msec1']*np.sin(chain['inc1']) * 1047.57 # Convert to M_J
+    m1sini_med, m1sini_err = np.median(m1sini_chain), m1sini_chain.std()
+    
+    # Formula for mutual inclination from Eq. 2 of Huang & Ji (2022), which they got from Gellert+1997
+    i_mut_chain = np.arccos(    np.cos(chain['inc0'])*np.cos(chain['inc1'])\
+                               +np.sin(chain['inc0'])*np.sin(chain['inc1'])*np.cos(chain['asc0']\
+                                                                                  -chain['asc1']))*180/np.pi
+    i_mut_med, i_mut_err = np.median(i_mut_chain), i_mut_chain.std()
+    
+    
+    print(f"Companion Msini: {m1sini_med} +/- {m1sini_err} M_Jup") 
+    print(f"Mutual inclination: {i_mut_med} +\- {i_mut_err} deg")
+    
+    #import pdb; pdb.set_trace()
+    
+    return
+    
 
 
 
@@ -90,17 +126,19 @@ def prep_config():
 if __name__=="__main__":
     
     gamma_cep_path = os.getcwd() # Preserve CWD of gamma cep Orvara script
-    orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Local Orvara parent dir
-    # orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
+    #orvara_parent_path = "/Users/judahvz/research/code/GitHub/" # Local Orvara parent dir
+    orvara_parent_path = "/data/user/judahvz/planet_bd/" # Cadence Orvara parent dir
     orvara_to_gamma_cep = os.path.relpath(gamma_cep_path, start=os.path.dirname(orvara_parent_path))
     
     #prep_config()
-    # import pdb; pdb.set_trace()
     
     
     conf_path = os.path.join(orvara_to_gamma_cep, "config_gamma_cep.ini")
     outputs_path = os.path.join(orvara_to_gamma_cep, "outputs/")
     run_orvara(conf_path, outputs_path) # Run Orvara
+    
+    calculate_params_from_chains()
+    #import pdb; pdb.set_trace()
     
     
 
