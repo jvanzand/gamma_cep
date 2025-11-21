@@ -13,9 +13,6 @@ def format_rvs():
                    Octofitter and for 
                    Orvara
     """
-
-    # Load RVs from Jump
-    jump_rvs = pd.read_csv('222404_jump_rvs.csv')
     
     # Load and format literature RVs
     lit_rvs = pd.read_csv("222404_lit_rvs.dat", delim_whitespace=True, skiprows=9)
@@ -40,13 +37,28 @@ def format_rvs():
     
     
     ## Dicts to give tel names to the Lit RVs and indices to the Jump RVs
-    ind2tel = {0:'mcdonald1', 1:'torres', 2:'cfht', 3:'mcdonald2', 4:'mcdonald3', 5:'griffin', 6:'j', 7:'apf'}
+    ind2tel = {0:'mcdonald1', 1:'torres', 2:'cfht', 3:'mcdonald2', 
+               4:'mcdonald3', 5:'griffin', 6:'tres', 7:'j', 8:'apf'}
     lit_rvs['tel'] = lit_rvs['tel_ind'].map(ind2tel)
     
-    tel2ind = {tel:f"{ind}" for ind, tel in ind2tel.items()} # Invert tel_dict above to go back to inds
-    jump_rvs['tel_ind'] = jump_rvs['tel'].map(tel2ind)
     
-    all_rvs = pd.concat([lit_rvs, jump_rvs]) # Combine all RVs
+    # Load RVs from Jump
+    jump_rvs = pd.read_csv('222404_jump_rvs.csv')
+    
+    # Load new RVs from Guillermo Torres
+    tres_rvs = pd.read_csv('222404_TRES_rvs.dat', delim_whitespace=True)
+    tres_rvs['time'] = tres_rvs['BJD-2400000']+2400000
+    tres_rvs['mnvel'] = tres_rvs['RV']*1000 # Convert km/s --> m/s
+    tres_rvs['errvel'] = tres_rvs['err']*1000
+    tres_rvs['tel'] = 'tres'
+    
+    
+    new_rvs = pd.concat([tres_rvs, jump_rvs])[['time', 'mnvel', 'errvel', 'tel']]
+    
+    tel2ind = {tel:f"{ind}" for ind, tel in ind2tel.items()} # Invert tel_dict above to go back to inds
+    new_rvs['tel_ind'] = new_rvs['tel'].map(tel2ind)
+    
+    all_rvs = pd.concat([lit_rvs, new_rvs]) # Combine all RVs
     
     # import pdb; pdb.set_trace()
     
